@@ -1,62 +1,84 @@
 # Skill Factory 🛠️
 
-A comprehensive guide for developing OpenClaw skills. OpenClaw skills extend your AI assistant with new capabilities.
+OpenClaw 技能开发工厂，包含开发指南、模板、示例和实际技能项目。
 
-## What is a Skill?
+## 目录结构
 
-A skill is a directory containing a `SKILL.md` file that provides instructions and tool definitions to the LLM, optionally including scripts and resources.
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [SKILL_DEVELOPMENT_GUIDE.md](./SKILL_DEVELOPMENT_GUIDE.md) | Complete skill development tutorial |
-| [templates/](./templates/) | SKILL.md templates for different use cases |
-| [examples/](./examples/) | Example skills to learn from |
-
-## Quick Start
-
-### 1. Create a Skill Directory
-
-```bash
-mkdir -p ~/.openclaw/workspace/skills/my-skill
+```
+skill-factory/
+├── README.md                           # 本文件
+├── SKILL_DEVELOPMENT_GUIDE.md          # 技能开发教程（英文）
+├── SKILL_DEVELOPMENT_GUIDE_CN.md       # 技能开发教程（中文）
+├── templates/                          # SKILL.md 模板
+├── examples/                           # 示例技能
+│   ├── weather/
+│   ├── image-gen/
+│   └── data-processing/
+└── skills/                             # 实际技能项目
+    └── companion-agent/                # 陪伴型智能体
+        ├── SKILL.md                    # 技能定义
+        ├── src/                        # 源代码
+        ├── config/                     # 配置
+        └── docs/                       # 项目文档
 ```
 
-### 2. Create SKILL.md
+## 技能项目
+
+### 陪伴型智能体 (companion-agent)
+
+一个可定制化的陪伴型智能体框架，支持多场景：
+
+- **阶段1**：儿童教育陪伴（优先）
+- **阶段2**：老人陪伴
+- **阶段3**：单身男女陪伴
+- **阶段4**：心理陪伴
+
+详见 [skills/companion-agent/](./skills/companion-agent/)
+
+## 开发指南
+
+| 文档 | 说明 |
+|------|------|
+| [SKILL_DEVELOPMENT_GUIDE.md](./SKILL_DEVELOPMENT_GUIDE.md) | 完整的技能开发教程（英文） |
+| [SKILL_DEVELOPMENT_GUIDE_CN.md](./SKILL_DEVELOPMENT_GUIDE_CN.md) | 完整的技能开发教程（中文） |
+| [templates/](./templates/) | 不同场景的 SKILL.md 模板 |
+| [examples/](./examples/) | 示例技能供学习参考 |
+
+## 快速开始
+
+### 1. 创建技能目录
+
+```bash
+mkdir -p skills/my-skill
+```
+
+### 2. 创建 SKILL.md
 
 ```markdown
 ---
 name: my-skill
-description: A brief description of what this skill does
+description: 简要描述这个技能的功能
 ---
 
-# My Skill
+# 我的技能
 
-Instructions for the AI agent on how to use this skill...
+给 AI 智能体的使用说明...
 ```
 
-### 3. Refresh Skills
+### 3. 刷新技能
 
-Ask your agent to "refresh skills" or restart the gateway.
+让你的智能体"刷新技能"或重启 Gateway。
 
-## Skill Locations
+## 资源链接
 
-Skills are loaded from three places (in order of precedence):
+- [OpenClaw 官方文档](https://docs.openclaw.ai/tools/skills)
+- [ClawHub 技能市场](https://clawhub.com)
+- [AgentSkills 规范](https://agentskills.io)
 
-1. **Workspace skills**: `<workspace>/skills/` (highest priority)
-2. **Managed skills**: `~/.openclaw/skills/`
-3. **Bundled skills**: Shipped with OpenClaw installation
+## 贡献
 
-## Resources
+欢迎贡献你自己的技能或改进本指南。
 
-- [Official Documentation](https://docs.openclaw.ai/tools/skills)
-- [ClawHub - Skill Registry](https://clawhub.com)
-- [AgentSkills Spec](https://agentskills.io)
-
-## Contributing
-
-Feel free to contribute your own skills or improvements to this guide.
-
-## License
+## 许可证
 
 MIT
