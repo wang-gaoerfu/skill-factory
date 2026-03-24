@@ -39,9 +39,13 @@
 │                      核心层 (Core Layer)                         │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐   │
-│  │ 性格引擎   │ │ 记忆系统   │ │ 对话引擎   │ │ 任务调度   │   │
-│  │ Persona    │ │ Memory     │ │ Dialog     │ │ Scheduler  │   │
+│  │ 性格引擎   │ │ 记忆系统   │ │ 对话引擎   │ │ 分析引擎   │   │
+│  │ Persona    │ │ Memory     │ │ Dialog     │ │ Analysis   │   │
 │  └────────────┘ └────────────┘ └────────────┘ └────────────┘   │
+│  ┌────────────┐ ┌────────────┐                                 │
+│  │ 任务调度   │ │ 报告生成   │                                 │
+│  │ Scheduler  │ │ Reporter   │                                 │
+│  └────────────┘ └────────────┘                                 │
 └─────────────────────────────────────────────────────────────────┘
                                 │
                                 ▼
@@ -119,7 +123,53 @@
 - 情感分析
 - 多轮对话
 
-### 2.4 任务调度 (Scheduler)
+### 2.4 分析引擎 (Analysis Engine)
+
+负责从对话和行为中提取洞察，分析用户各方面情况，生成带依据的报告。
+
+```
+分析类型：
+├── 性格分析 (Personality)
+│   ├── 外向/内向判断
+│   ├── 情绪稳定性
+│   └── 社交倾向
+├── 天赋判断 (Talent)
+│   ├── 逻辑思维
+│   ├── 创造力
+│   ├── 语言表达
+│   ├── 数学能力
+│   ├── 艺术感知
+│   └── 运动协调
+├── 心理状况 (Psychological)
+│   ├── 情绪状态
+│   ├── 压力水平
+│   └── 心理健康预警
+├── 兴趣发现 (Interest)
+│   ├── 兴趣领域识别
+│   ├── 兴趣深度评估
+│   └── 兴趣发展趋势
+├── 优缺点分析 (Strength & Weakness)
+│   ├── 优点发现
+│   ├── 缺点识别
+│   └── 改进建议
+└── 行为模式 (Behavior Pattern)
+    ├── 学习习惯
+    ├── 社交模式
+    └── 时间管理
+```
+
+**核心能力**：
+- 从对话中提取分析证据
+- 基于证据生成带依据的结论
+- 计算分析置信度
+- 生成结构化报告
+
+**报告生成**：
+- 日报/周报/月报
+- 专项分析报告
+- 家长可查看的完整报告
+
+### 2.5 任务调度 (Scheduler)
 
 负责定时任务、提醒、主动关怀。
 
@@ -287,6 +337,48 @@
   "tags": ["string"],
   "created_at": "timestamp",
   "last_accessed": "timestamp"
+}
+```
+
+### 5.4 分析结果模型
+
+```json
+{
+  "result_id": "string",
+  "user_id": "string",
+  "analysis_type": "talent|personality|psychological|interest|strength_weakness",
+  "dimension": "string",
+  "conclusion": "string",
+  "confidence": "high|medium|low",
+  "evidence_list": [
+    {
+      "evidence_id": "string",
+      "evidence_type": "conversation|behavior|test",
+      "content": "string",
+      "timestamp": "timestamp",
+      "context": "string",
+      "relevance_score": 0.0
+    }
+  ],
+  "suggestions": ["string"],
+  "created_at": "timestamp"
+}
+```
+
+### 5.5 分析报告模型
+
+```json
+{
+  "report_id": "string",
+  "user_id": "string",
+  "report_type": "daily|weekly|monthly|special",
+  "period_start": "timestamp",
+  "period_end": "timestamp",
+  "summary": "string",
+  "results": ["AnalysisResult"],
+  "overall_assessment": "string",
+  "recommendations": ["string"],
+  "generated_at": "timestamp"
 }
 ```
 
