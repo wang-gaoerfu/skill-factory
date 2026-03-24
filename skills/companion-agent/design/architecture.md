@@ -96,22 +96,121 @@
 
 ### 2.2 记忆系统 (Memory System)
 
-负责存储用户信息、对话历史、成长记录。
+负责存储用户信息、对话历史、成长记录。**支持多年陪伴的长期记忆**。
+
+#### 短期记忆 vs 长期记忆
 
 ```
-记忆类型：
-├── 用户档案 (User Profile)
-│   ├── 基本信息
-│   ├── 兴趣爱好
-│   └── 性格特点
-├── 对话记忆 (Conversation Memory)
-│   ├── 短期记忆（最近N轮对话）
-│   └── 长期记忆（重要事件）
-└── 成长记录 (Growth Record)
-    ├── 学习记录
-    ├── 健康记录
-    └── 里程碑事件
+记忆系统架构：
+├── 短期记忆 (MemorySystem)
+│   ├── 最近N轮对话
+│   ├── 当前会话上下文
+│   └── 临时工作记忆
+│
+└── 长期记忆 (LongTermMemorySystem) ⭐ 核心
+    ├── 持久化存储
+    ├── 向量语义检索
+    └── 分层生命周期管理
 ```
+
+#### 长期记忆分类
+
+```
+记忆类别：
+├── 身份档案（永不遗忘）
+│   ├── identity: 姓名、生日、过敏史
+│   ├── personality: 性格特点
+│   └── preference: 偏好设置
+│
+├── 成长记录（长期保留）
+│   ├── milestone: 里程碑事件（第一次...）
+│   ├── achievement: 成就记录
+│   └── learning: 学习进展
+│
+├── 对话记忆（中期保留）
+│   ├── conversation: 重要对话
+│   ├── emotion: 情绪记录
+│   └── behavior: 行为观察
+│
+├── 洞察分析（长期保留）
+│   ├── insight: 洞察发现
+│   ├── talent: 天赋判断
+│   └── interest: 兴趣发现
+│
+└── 健康数据（老人陪伴）
+    ├── health: 健康数据
+    └── medication: 用药记录
+```
+
+#### 记忆优先级
+
+| 优先级 | 保留策略 | 示例 |
+|--------|----------|------|
+| CRITICAL | 永久保留 | 生日、过敏史、重大成就 |
+| HIGH | 长期保留（5年+） | 天赋判断、性格分析 |
+| MEDIUM | 中期保留（1-3年） | 学习记录、兴趣变化 |
+| LOW | 短期保留（1年内） | 日常对话、临时信息 |
+
+#### 存储后端
+
+| 后端 | 适用场景 | 特点 |
+|------|----------|------|
+| SQLite | 本地开发、小规模 | 零配置、单文件 |
+| PostgreSQL | 中等规模 | 关系型、ACID |
+| Chroma | 中等规模 | 向量检索、本地部署 |
+| Pinecone | 大规模、云端 | 云托管、高可用 |
+
+#### 关键功能
+
+```python
+# 存储记忆
+memory = LongTermMemory(
+    memory_id="mem_001",
+    user_id="child_001",
+    category=MemoryCategory.MILESTONE,
+    priority=MemoryPriority.CRITICAL,
+    title="第一次自己系鞋带",
+    content="2026年3月24日，小明第一次成功自己系鞋带",
+    keywords=["第一次", "独立", "成长"]
+)
+memory_system.store(memory)
+
+# 语义检索
+memories = memory_system.recall(
+    user_id="child_001",
+    query="他有什么成长里程碑？",
+    limit=10
+)
+
+# 时间线查看
+timeline = memory_system.get_memory_timeline(
+    user_id="child_001",
+    start_date="2024-01-01",
+    end_date="2026-12-31"
+)
+
+# 数据导出（隐私保护）
+data = memory_system.export_user_data(user_id="child_001")
+```
+
+#### 数据生命周期管理
+
+```
+记忆生命周期：
+┌─────────┐     ┌─────────┐     ┌─────────┐     ┌─────────┐
+│  创建   │ ──▶ │  活跃   │ ──▶ │  归档   │ ──▶ │  清理   │
+└─────────┘     └─────────┘     └─────────┘     └─────────┘
+     │               │               │               │
+   首次记录       频繁访问        低优先级         过期删除
+                  access_count    旧数据归档       用户请求
+```
+
+#### 隐私保护
+
+- 数据加密存储
+- 用户可导出自己的数据
+- 用户可请求删除所有数据
+- 符合 GDPR 等隐私法规
 
 ### 2.3 对话引擎 (Dialog Engine)
 

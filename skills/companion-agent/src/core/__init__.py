@@ -6,6 +6,7 @@ from .persona_engine import PersonaEngine
 from .memory_system import MemorySystem
 from .dialog_engine import DialogEngine
 from .analysis_engine import AnalysisEngine, AnalysisType, AnalysisReport
+from .long_term_memory import LongTermMemorySystem, LongTermMemory, MemoryCategory, MemoryPriority
 
 __all__ = [
     'PersonaEngine', 
@@ -13,5 +14,9 @@ __all__ = [
     'DialogEngine',
     'AnalysisEngine',
     'AnalysisType',
-    'AnalysisReport'
+    'AnalysisReport',
+    'LongTermMemorySystem',
+    'LongTermMemory',
+    'MemoryCategory',
+    'MemoryPriority'
 ]
