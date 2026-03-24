@@ -483,15 +483,87 @@ data = memory_system.export_user_data(user_id="child_001")
 
 ---
 
-## 六、技术选型（待定）
+## 六、技术选型
+
+### 6.1 存储后端：SQLite + Chroma
+
+**阶段1采用 SQLite + Chroma 组合方案**：
+
+| 数据库 | 用途 | 原因 |
+|--------|------|------|
+| **SQLite** | 结构化数据 | 用户档案、记忆元数据、分析结果 |
+| **Chroma** | 向量数据 | 语义检索、相似度搜索 |
+
+**选择理由**：
+
+| 优势 | 说明 |
+|------|------|
+| 零配置 | SQLite 单文件，Chroma 本地目录，开箱即用 |
+| 易备份 | 复制文件就能备份 |
+| 易迁移 | 后期可平滑迁移到 PostgreSQL + Pinecone |
+| 开发快 | Python 原生支持，不需要额外服务 |
+| 成本低 | 无需云服务费用 |
+
+**数据分工**：
+
+```
+SQLite 存储结构化数据：
+├── 用户档案（user_profiles）
+├── 记忆元数据（memories: memory_id, title, category, priority）
+├── 分析结果（analysis_results）
+└── 报告记录（reports）
+
+Chroma 存储向量数据：
+├── 记忆内容的向量嵌入
+├── 语义检索支持
+└── 相似记忆推荐
+```
+
+**数据目录结构**：
+
+```
+~/.openclaw/data/
+└── companion-agent/
+    ├── memories.db        # SQLite 数据库
+    └── chroma/            # Chroma 向量数据库
+        ├── chroma.sqlite3
+        └── ...
+```
+
+### 6.2 技术演进路线
+
+```
+阶段1（当前）: SQLite + Chroma
+    │
+    │ • 用户量 < 1000
+    │ • 单机部署
+    │ • 本地开发验证
+    │
+    ▼
+阶段2: PostgreSQL + Chroma
+    │
+    │ • 用户量 1000-10000
+    │ • 需要关系型数据库高级功能
+    │ • 多实例部署
+    │
+    ▼
+阶段3: PostgreSQL + Pinecone
+    │
+    │ • 用户量 > 10000
+    │ • 需要云端托管
+    │ • 高可用、自动扩展
+```
+
+### 6.3 其他技术选型（待定）
 
 | 层级 | 技术 | 候选方案 |
 |------|------|----------|
 | 前端 | Web配置界面 | React / Vue |
-| 后端 | OpenClaw Skill | TypeScript |
-| 数据库 | 向量数据库 | Pinecone / Chroma |
+| 后端 | OpenClaw Skill | TypeScript / Python |
+| 结构化存储 | SQLite ✅ | SQLite → PostgreSQL |
+| 向量存储 | Chroma ✅ | Chroma → Pinecone |
 | LLM | 大语言模型 | GPT-4 / Claude / 国产模型 |
-| 语音 | TTS/STT | ElevenLabs / Azure |
+| 语音 | TTS/STT | ElevenLabs / Azure / 讯飞 |
 | 智能家居 | Home Assistant | Python API |
 
 ---
