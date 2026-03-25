@@ -580,10 +580,254 @@ Chroma 存储向量数据：
 
 ---
 
-## 八、待讨论问题
+## 八、成长型智能体设计 ⭐ 核心特性
+
+### 8.1 设计理念
+
+**核心理念：智能体跟着孩子一起"长大"**
+
+传统智能体是静态的，但孩子的成长是动态的。我们的智能体必须具备"成长能力"：
+
+| 维度 | 传统智能体 | 成长型智能体 |
+|------|------------|--------------|
+| 知识库 | 固定不变 | 根据年龄自动升级 |
+| 记忆库 | 短期/无 | 长期积累，完整成长轨迹 |
+| 角色年龄 | 固定 | 跟着孩子一起增长 |
+| 对话风格 | 统一 | 从童趣→成熟，适应认知发展 |
+| 陪伴深度 | 浅层 | 深度了解，因材施教 |
+
+### 8.2 知识库分层演进
+
+知识库根据孩子年龄阶段自动切换内容深度和表达方式：
+
+| 年龄段 | 阶段名称 | 知识库内容 | 对话风格 | 典型表达 |
+|--------|----------|------------|----------|----------|
+| **3-6岁** | 启蒙期 | 基础认知、简单故事、生活常识、颜色形状 | 童趣、短句、多鼓励、拟人化 | "哇！好棒呀！~" |
+| **6-9岁** | 探索期 | 小学知识、百科入门、兴趣培养、简单逻辑 | 引导式、启发思考、好奇探索 | "你觉得是为什么呢？" |
+| **9-12岁** | 成长期 | 小学高年级、深度探索、思维训练、价值观引导 | 讨论式、培养逻辑、尊重观点 | "我同意你的观点，但..." |
+| **12岁+** | 成熟期 | 初中知识、复杂话题、独立思考、人生规划 | 朋友式、平等对话、深度交流 | "你怎么看这件事？" |
+
+**知识库自动切换机制**：
+
+```python
+class KnowledgeBaseManager:
+    def get_knowledge_tier(self, child_age: int) -> KnowledgeTier:
+        """根据年龄返回对应的知识库层级"""
+        if child_age < 6:
+            return KnowledgeTier.ENLIGHTENMENT  # 启蒙期
+        elif child_age < 9:
+            return KnowledgeTier.EXPLORATION   # 探索期
+        elif child_age < 12:
+            return KnowledgeTier.GROWTH        # 成长期
+        else:
+            return KnowledgeTier.MATURITY      # 成熟期
+```
+
+### 8.3 记忆库分层演进
+
+记忆库采用**多层生命周期管理**，确保关键信息永不丢失：
+
+```
+记忆层次结构：
+├── 核心档案层（永久保留）
+│   ├── 身份信息：姓名、生日、血型、过敏史
+│   ├── 性格画像：核心性格特点、长期稳定
+│   ├── 天赋判断：发现的天赋潜能
+│   └── 重大里程碑：第一次说话、第一次上学等
+│
+├── 成长轨迹层（长期保留，5年+）
+│   ├── 学习历程：各学科进步曲线
+│   ├── 兴趣演变：兴趣爱好的变化轨迹
+│   ├── 能力发展：各项能力的发展记录
+│   └── 重要事件：获奖、比赛、特殊经历
+│
+├── 行为洞察层（中期保留，1-3年）
+│   ├── 行为模式：学习习惯、社交模式
+│   ├── 情绪记录：情绪变化趋势
+│   ├── 对话摘要：重要对话的内容摘要
+│   └── 分析结论：各类分析的结果
+│
+├── 日常互动层（短期保留，1年内）
+│   ├── 日常对话：聊天记录
+│   ├── 临时任务：待办事项、提醒
+│   └── 即时情绪：当前情绪状态
+│
+└── 历史档案层（可导出、可删除）
+    └── 完整历史：所有数据的备份
+```
+
+**记忆优先级与保留策略**：
+
+| 优先级 | 保留时长 | 内容类型 | 示例 |
+|--------|----------|----------|------|
+| **PERMANENT** | 永久 | 核心档案 | 生日、天赋判断、重大成就 |
+| **LONG** | 5年+ | 成长轨迹 | 学习曲线、兴趣演变 |
+| **MEDIUM** | 1-3年 | 行为洞察 | 分析结论、情绪记录 |
+| **SHORT** | 1年内 | 日常互动 | 日常对话、临时任务 |
+| **ARCHIVE** | 按需 | 历史档案 | 完整历史备份 |
+
+### 8.4 角色成长机制
+
+智能体的角色属性随孩子年龄同步增长：
+
+```json
+{
+  "child_profile": {
+    "child_id": "child_001",
+    "name": "小明",
+    "birth_date": "2019-03-15",
+    "current_age": 7
+  },
+  "persona_config": {
+    "persona_id": "xiaomeng",
+    "base_name": "小萌",
+    "base_age": 7,
+    "growth_mode": "sync_with_child",
+    "current_age": 7,
+    "last_birthday_update": "2026-03-15"
+  }
+}
+```
+
+**角色成长触发时机**：
+1. 孩子生日 → 自动升级
+2. 家长手动调整 → 确认后升级
+3. 学期切换 → 提示升级
+
+**角色成长时自动更新**：
+- [ ] 知识库层级
+- [ ] 对话风格模板
+- [ ] 角色年龄显示
+- [ ] 能力模块配置
+- [ ] 分析算法参数
+
+### 8.5 陪伴深度演进
+
+随着陪伴时间增长，智能体对孩子的了解越来越深：
+
+| 陪伴时长 | 了解深度 | 典型能力 |
+|----------|----------|----------|
+| **1个月内** | 初步认识 | 知道名字、年龄、基本喜好 |
+| **1-3个月** | 逐渐熟悉 | 了解兴趣、学习习惯、性格特点 |
+| **3-6个月** | 深入了解 | 发现天赋、识别情绪模式、预测需求 |
+| **6个月-1年** | 熟悉伙伴 | 完整成长轨迹、因材施教、主动关怀 |
+| **1年以上** | 深度陪伴 | 了解孩子的全部，像老朋友一样 |
+
+**陪伴深度可视化**：
+
+```
+小明与小萌的陪伴深度
+─────────────────────────────
+陪伴时长：1年3个月
+了解深度：★★★★☆ (85%)
+
+已了解的内容：
+✅ 性格特点：外向、好奇心强、爱问问题
+✅ 学习风格：视觉学习型、注意力集中时间约20分钟
+✅ 兴趣爱好：画画★★★★、科学★★★☆、数学★★☆☆
+✅ 天赋潜能：创造力★★★★、语言表达★★★★、逻辑思维★★★☆
+✅ 情绪模式：压力敏感型、需要鼓励支持
+✅ 成长轨迹：完整记录156个里程碑事件
+
+待深入了解：
+○ 社交模式（数据不足）
+○ 价值观形成（年龄尚小）
+```
+
+### 8.6 数据连续性保证
+
+**问题**：孩子从3岁用到12岁，数据如何保证不丢失？
+
+**解决方案**：
+
+```
+数据连续性保障机制：
+├── 多重备份
+│   ├── 本地实时备份
+│   ├── 云端定期备份
+│   └── 家长可导出
+├── 版本管理
+│   ├── 知识库版本标记
+│   ├── 记忆版本追踪
+│   └── 配置版本回滚
+├── 迁移支持
+│   ├── 设备迁移工具
+│   ├── 账号迁移工具
+│   └── 数据导入导出
+└── 隐私保护
+    ├── 数据加密存储
+    ├── 家长完全控制
+    └── 符合儿童隐私法规
+```
+
+### 8.7 成长型智能体的技术实现
+
+**核心组件**：
+
+```python
+class GrowthEngine:
+    """成长型智能体引擎"""
+    
+    def __init__(self, child_id: str):
+        self.child_id = child_id
+        self.child_profile = self.load_child_profile()
+        self.persona = self.load_persona()
+        self.knowledge_base = self.get_knowledge_tier()
+        self.memory_system = self.get_memory_system()
+    
+    def get_knowledge_tier(self) -> KnowledgeTier:
+        """根据年龄获取知识库层级"""
+        age = self.child_profile.age
+        if age < 6:
+            return KnowledgeTier.ENLIGHTENMENT
+        elif age < 9:
+            return KnowledgeTier.EXPLORATION
+        elif age < 12:
+            return KnowledgeTier.GROWTH
+        else:
+            return KnowledgeTier.MATURITY
+    
+    def get_dialog_style(self) -> DialogStyle:
+        """根据年龄获取对话风格"""
+        tier = self.get_knowledge_tier()
+        styles = {
+            KnowledgeTier.ENLIGHTENMENT: DialogStyle.CHILDISH,
+            KnowledgeTier.EXPLORATION: DialogStyle.GUIDING,
+            KnowledgeTier.GROWTH: DialogStyle.DISCUSSING,
+            KnowledgeTier.MATURITY: DialogStyle.FRIENDLY
+        }
+        return styles[tier]
+    
+    def check_growth_trigger(self) -> bool:
+        """检查是否需要触发成长升级"""
+        # 孩子生日检查
+        if self.is_birthday():
+            return True
+        # 学期切换检查
+        if self.is_semester_change():
+            return True
+        return False
+    
+    def perform_growth_upgrade(self):
+        """执行成长升级"""
+        old_tier = self.get_knowledge_tier()
+        self.persona.current_age = self.child_profile.age
+        new_tier = self.get_knowledge_tier()
+        
+        if old_tier != new_tier:
+            self.notify_growth_upgrade(old_tier, new_tier)
+            self.archive_old_tier_data(old_tier)
+            self.initialize_new_tier_data(new_tier)
+```
+
+---
+
+## 九、待讨论问题
 
 1. **LLM选择**：用哪个模型？国产还是OpenAI？
 2. **语音方案**：用哪家TTS/STT？
 3. **数据存储**：用户数据如何存储？隐私保护？
 4. **商业化**：免费还是付费？如何变现？
 5. **硬件接入优先级**：先支持哪些智能家居品牌？
+6. **成长升级通知**：孩子生日时如何优雅地通知升级？
+7. **跨年龄段数据迁移**：如何平滑过渡知识库层级？
